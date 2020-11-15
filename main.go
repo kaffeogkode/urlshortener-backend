@@ -25,7 +25,8 @@ func main() {
 	}
 
 	log.Println("Starting server 🐱‍🏍👏")
-	http.Handle("/", createLinksHandler(db))
+	http.Handle("/v/", createLinksHandler(db))
+	http.Handle("/api/", wrap(createAPIHandler(db)))
 	err = http.ListenAndServe("127.0.0.1:9000", nil)
 	if err != nil {
 		panic(err)
