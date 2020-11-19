@@ -8,6 +8,10 @@ type link struct {
 	Visits    []linkVisit `gorm:"foreignKey:LinkID" json:"-"`
 }
 
+type linkPost struct {
+	URL string `json:"url"`
+}
+
 type linkVisit struct {
 	ID        int64  `gorm:"primaryKey" json:"id"`
 	LinkID    int64  `json:"-"`

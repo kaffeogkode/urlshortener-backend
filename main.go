@@ -25,9 +25,24 @@ func main() {
 	}
 
 	log.Println("Starting server 🐱‍🏍👏")
-	http.Handle("/v/", createLinksHandler(db))
-	http.Handle("/api/", wrap(createAPIHandler(db)))
-	err = http.ListenAndServe("127.0.0.1:9000", nil)
+
+	linksHandler := createLinksHandler(db)
+	apiHandler := wrap(createAPIHandler(db))
+
+	// this anonymous function splits the work between the handlers based on
+	// hostname in the request
+	err = http.ListenAndServe(":80", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch r.Host {
+		case "admin.l.kaffeogkode.dk":
+			apiHandler.ServeHTTP(w, r)
+			break
+		case "l.kaffeogkode.dk":
+			linksHandler.ServeHTTP(w, r)
+			break
+		default:
+			http.Error(w, `¯\_(ツ)_/¯`, http.StatusNotFound)
+		}
+	}))
 	if err != nil {
 		panic(err)
 	}

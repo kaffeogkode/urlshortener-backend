@@ -17,7 +17,7 @@ func createLinksHandler(db *gorm.DB) http.Handler {
 	// use pat for dynamic routing
 	router := pat.New()
 	// the part after the slash is dynamic
-	router.Get("/v/{hash}", func(w http.ResponseWriter, r *http.Request) {
+	router.Get("/{hash}", func(w http.ResponseWriter, r *http.Request) {
 		hashStr := r.URL.Query().Get(":hash")
 		var l link
 		err := db.Where(link{Hash: hashStr}).First(&l).Error
